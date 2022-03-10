@@ -18,3 +18,6 @@ bool CommitTransaction(PGresult* res, PGconn* conn);
 
 //rollback
 bool Rollback(PGresult* res, PGconn* conn);
+
+//deallocate all prepares
+bool DeallocateAllPrepares(PGconn* conn);
