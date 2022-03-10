@@ -74,7 +74,7 @@ bool Rollback(PGresult* res, PGconn* conn) {
 bool DeallocateAllPrepares(PGconn* conn) {
 	string command = "DEALLOCATE ALL";
 	//Execute prepared statement
-	res = PQexec(conn, command.c_str());
+	PGresult* res = PQexec(conn, command.c_str());
 	if (PQresultStatus(res) != PGRES_COMMAND_OK)
 	{
 		fprintf(stderr, "DEALLOCATE command failed: %s", PQerrorMessage(conn));
