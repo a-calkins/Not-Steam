@@ -91,6 +91,8 @@ bool DeleteUser(PGconn* conn, string userEmail) {
 	if (!CommitTransaction(res, conn)) {
 		return false;
 	}
+	
+	DeallocateAllPrepares(conn);
 	return true;
 }
 
@@ -131,6 +133,8 @@ bool DeleteFriendship(PGconn* conn, string accountEmail, string friendEmail) {
 	if (!CommitTransaction(res, conn)) {
 		return false;
 	}
+	
+	DeallocateAllPrepares(conn);
 	return true;
 }
 
@@ -175,6 +179,8 @@ bool DeletePurchase(PGconn* conn, string purchaseNumber) {
 	if (!CommitTransaction(res, conn)) {
 		return false;
 	}
+	
+	DeallocateAllPrepares(conn);
 	return true;
 }
 
@@ -229,6 +235,8 @@ bool DeleteGame(PGconn* conn, string title) {
 	if (!CommitTransaction(res, conn)) {
 		return false;
 	}
+	
+	DeallocateAllPrepares(conn);
 	return true;
 }
 
@@ -296,6 +304,8 @@ bool DeleteDeveloper(PGconn* conn, string devName) {
 	if (!CommitTransaction(res, conn)) {
 		return false;
 	}
+	
+	DeallocateAllPrepares(conn);
 	return true;
 }
 
@@ -363,5 +373,7 @@ bool DeletePublisher(PGconn* conn, string pubName) {
 	if (!CommitTransaction(res, conn)) {
 		return false;
 	}
+	
+	DeallocateAllPrepares(conn);
 	return true;
 }
