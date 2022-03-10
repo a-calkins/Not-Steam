@@ -43,6 +43,8 @@ bool UpdateAccountFirstLastName(PGconn* conn, string userEmail, string newFirstN
 	if (!CommitTransaction(res, conn)) {
 		return false;
 	}
+	
+	DeallocateAllPrepares(conn);
 	return true;
 }
 
@@ -69,6 +71,8 @@ bool UpdateAccountEmail(PGconn* conn, string oldUserEmail, string newUserEmail) 
 	if (!CommitTransaction(res, conn)) {
 		return false;
 	}
+	
+	DeallocateAllPrepares(conn);
 	return true;
 }
 
@@ -96,6 +100,8 @@ bool UpdateAccountPassword(PGconn* conn, string userEmail, string newPassword) {
 	if (!CommitTransaction(res, conn)) {
 		return false;
 	}
+	
+	DeallocateAllPrepares(conn);
 	return true;
 }
 
@@ -123,6 +129,8 @@ bool UpdateAccountUsername(PGconn* conn, string userEmail, string newUsername) {
 	if (!CommitTransaction(res, conn)) {
 		return false;
 	}
+	
+	DeallocateAllPrepares(conn);
 	return true;
 }
 
@@ -150,6 +158,8 @@ bool UpdateGameGenreID(PGconn* conn, string title, string newGenreID) {
 	if (!CommitTransaction(res, conn)) {
 		return false;
 	}
+	
+	DeallocateAllPrepares(conn);
 	return true;
 }
 
@@ -177,6 +187,8 @@ bool UpdateGameTitle(PGconn* conn, string oldTitle, string newTitle) {
 	if (!CommitTransaction(res, conn)) {
 		return false;
 	}
+	
+	DeallocateAllPrepares(conn);
 	return true;
 }
 
@@ -204,6 +216,8 @@ bool UpdateGameDescription(PGconn* conn, string title, string newDescription) {
 	if (!CommitTransaction(res, conn)) {
 		return false;
 	}
+	
+	DeallocateAllPrepares(conn);
 	return true;
 }
 
@@ -231,6 +245,8 @@ bool UpdateGameReleaseDate(PGconn* conn, string title, string newReleaseDate) {
 	if (!CommitTransaction(res, conn)) {
 		return false;
 	}
+	
+	DeallocateAllPrepares(conn);
 	return true;
 }
 
@@ -258,6 +274,8 @@ bool UpdateGamePrice(PGconn* conn, string title, string newPrice) {
 	if (!CommitTransaction(res, conn)) {
 		return false;
 	}
+	
+	DeallocateAllPrepares(conn);
 	return true;
 }
 
@@ -285,6 +303,8 @@ bool UpdateDeveloperName(PGconn* conn, string oldName, string newName) {
 	if (!CommitTransaction(res, conn)) {
 		return false;
 	}
+	
+	DeallocateAllPrepares(conn);
 	return true;
 }
 
@@ -312,5 +332,7 @@ bool UpdatePublisherName(PGconn* conn, string oldName, string newName) {
 	if (!CommitTransaction(res, conn)) {
 		return false;
 	}
+	
+	DeallocateAllPrepares(conn);
 	return true;
 }
