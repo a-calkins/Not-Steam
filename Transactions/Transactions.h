@@ -5,19 +5,19 @@
 using namespace std;
 
 //begins a transaction
-bool BeginTransaction(PGresult* res, PGconn* conn);
+bool BeginTransaction(PGconn* conn);
 
 //prepare a transaction
-bool PrepareTransaction(PGresult* res, PGconn* conn, string transaction);
+bool PrepareTransaction(PGconn* conn, string transaction);
 
 //execute a transaction
-bool ExecuteTransaction(PGresult* res, PGconn* conn, string transaction);
+bool ExecuteTransaction(PGconn* conn, string transaction);
 
 //commit
-bool CommitTransaction(PGresult* res, PGconn* conn);
+bool CommitTransaction(PGconn* conn);
 
 //rollback
-bool Rollback(PGresult* res, PGconn* conn);
+bool Rollback(PGconn* conn);
 
 //deallocate all prepares
 bool DeallocateAllPrepares(PGconn* conn);

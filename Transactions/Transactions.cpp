@@ -1,7 +1,8 @@
 #include "Transactions.h"
 
 //begins a transaction
-bool BeginTransaction(PGresult* res, PGconn* conn) {
+bool BeginTransaction(PGconn* conn) {
+	PGresult* res = NULL;
 	res = PQexec(conn, "BEGIN");
 	if (PQresultStatus(res) != PGRES_COMMAND_OK)
 	{
@@ -14,7 +15,8 @@ bool BeginTransaction(PGresult* res, PGconn* conn) {
 }
 
 //prepare a transaction
-bool PrepareTransaction(PGresult* res, PGconn* conn, string transaction) {
+bool PrepareTransaction(PGconn* conn, string transaction) {
+	PGresult* res = NULL;
 	string command = "PREPARE " + transaction;
 	res = PQexec(conn, command.c_str());
 	if (PQresultStatus(res) != PGRES_COMMAND_OK)
@@ -28,7 +30,8 @@ bool PrepareTransaction(PGresult* res, PGconn* conn, string transaction) {
 }
 
 //execute a transaction
-bool ExecuteTransaction(PGresult* res, PGconn* conn, string transaction) {
+bool ExecuteTransaction(PGconn* conn, string transaction) {
+	PGresult* res = NULL;
 	string command = "EXECUTE " + transaction;
 	//Execute prepared statement
 	res = PQexec(conn, command.c_str());
@@ -43,8 +46,9 @@ bool ExecuteTransaction(PGresult* res, PGconn* conn, string transaction) {
 }
 
 //commit
-bool CommitTransaction(PGresult* res, PGconn* conn) {
+bool CommitTransaction(PGconn* conn) {
 	//Commit, ending the transaction
+	PGresult* res = NULL;
 	res = PQexec(conn, "COMMIT");
 	if (PQresultStatus(res) != PGRES_COMMAND_OK)
 	{
@@ -57,8 +61,9 @@ bool CommitTransaction(PGresult* res, PGconn* conn) {
 }
 
 //rollback
-bool Rollback(PGresult* res, PGconn* conn) {
+bool Rollback(PGconn* conn) {
 	//Commit, ending the transaction
+	PGresult* res = NULL;
 	res = PQexec(conn, "ROLLBACK");
 	if (PQresultStatus(res) != PGRES_COMMAND_OK)
 	{
@@ -74,7 +79,8 @@ bool Rollback(PGresult* res, PGconn* conn) {
 bool DeallocateAllPrepares(PGconn* conn) {
 	string command = "DEALLOCATE ALL";
 	//Execute prepared statement
-	PGresult* res = PQexec(conn, command.c_str());
+	PGresult* res = NULL;
+	res = PQexec(conn, command.c_str());
 	if (PQresultStatus(res) != PGRES_COMMAND_OK)
 	{
 		fprintf(stderr, "DEALLOCATE command failed: %s", PQerrorMessage(conn));
