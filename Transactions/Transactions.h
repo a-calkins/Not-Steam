@@ -11,10 +11,11 @@ bool BeginTransaction(PGconn* conn);
 bool PrepareTransaction(PGconn* conn, string transaction);
 
 //execute a transaction
-PGresult* ExecuteTransaction(PGconn* conn, string transaction);
+bool ExecuteTransaction(PGconn* conn, string transaction);
 
+PGresult* ExecuteTransQuery(PGconn* conn, string transaction);
 //commit
-PGresult* CommitTransaction(PGconn* conn);
+bool CommitTransaction(PGconn* conn);
 
 //rollback
 bool Rollback(PGconn* conn);

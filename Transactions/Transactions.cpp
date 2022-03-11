@@ -15,7 +15,7 @@ bool BeginTransaction(PGconn* conn) {
 }
 
 //prepare a transaction
-bool PrepareTransaction(PGconn* conn, string transaction) {
+bool PrepareTransaction(PGconn* conn, string transaction) {  //For inserts, updates, and deletes
 	PGresult* res = NULL;
 	string command = "PREPARE " + transaction;
 	res = PQexec(conn, command.c_str());
@@ -29,19 +29,40 @@ bool PrepareTransaction(PGconn* conn, string transaction) {
 	return true;
 }
 
+
 //execute a transaction
-PGresult* ExecuteTransaction(PGconn* conn, string transaction) {
+bool ExecuteTransaction(PGconn* conn, string transaction) {
 	PGresult* res = NULL;
 	string command = "EXECUTE " + transaction;
 	//Execute prepared statement
 	res = PQexec(conn,command.c_str());
-	
-	return res;
-	//return true;
+	if (PQresultStatus(res) != PGRES_COMMAND_OK)
+	{
+		cout<< "ERROR: " + string(PQresultErrorMessage(res));
+		PQclear(res);
+		return false;
+	}
+	return true;
 }
 
+PGresult* ExecuteTransQuery(PGconn* conn, string transaction)
+{
+	PGresult* res = NULL;
+	string command = "EXECUTE " + transaction;
+	//Execute prepared statement
+	res = PQexec(conn, command.c_str());
+	if (PQresultStatus(res) != PGRES_TUPLES_OK)
+	{
+		cout << "ERROR: " + string(PQresultErrorMessage(res));
+		PQclear(res);
+		return NULL;
+	}
+	return res;
+	//return true;
+
+}
 //commit
-PGresult* CommitTransaction(PGconn* conn) {
+bool CommitTransaction(PGconn* conn) {
 	//Commit, ending the transaction
 	PGresult* res = NULL;
 	res = PQexec(conn, "COMMIT");
