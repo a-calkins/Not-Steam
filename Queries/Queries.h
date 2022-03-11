@@ -30,9 +30,12 @@ public:
 	string GetPurchByUser(string email, PGconn* conn);
 
 	string GetPurchByDate(string email, PGconn* conn);
-	string GetPurchByState(string state, PGconn* conn);
-	string GetPurchByBillAdd(string state, PGconn* conn);
 
+	string GetPurchByState(string state, PGconn* conn);
+
+	string GetPurchByBillAdd(string street, string city, string state, string zipcode, PGconn* conn);
+
+	string DeleteGame(PGconn* conn, string title);
 	
 private:
 	string Print(PGresult* res);

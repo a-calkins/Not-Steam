@@ -19,21 +19,23 @@ int main(int argc, char *argv[])
 		//PQfinish(conn);
 	//}
 	Queries* query = new Queries();
-	cout << query->GetGamesSold(conn);
-	//cout<<query->GetUsersByGame("Bayonetta", conn);
-	//cout << query->GetGamesByUser("zeroshift@hasevo.com",conn);
-	/*query->GetGamesReleasedBetweenDates("2019-12-25", "2019-12-30",conn);
-	query->GetGamesPriceRange(20.00,30.00, conn);
-	query->FriendsOfUser(1, conn);
-	query->GetGamesByPub("Rockstar Games", conn);
+	cout << query->GetGamesByUser("zeroshift@hasevo.com",conn) + "\n";
+	cout << query->GetGamesSold(conn) + "\n";
 	
-	query->GetGenreCount("Action", conn);
-	query->GetUsers_WT_SM_Games("xavHow@live.com",conn);
-	query->GetPurchByUser("xavHow@live.com", conn);
-query->GetPurchByDate("2021-09-24", conn);*/
-	//cout << query->GetPurchByState("WA", conn);
+	cout<<query->GetUsersByGame("Bayonetta", conn);
+	
+	cout<< query->GetGamesReleasedBetweenDates("2019-12-25", "2019-12-30",conn);
+	cout<<query->GetGamesPriceRange(20.00,30.00, conn);
+	cout << query->FriendsOfUser(1, conn);
+	cout << query->GetGamesByPub("Rockstar Games", conn);
+    cout << query->GetGenreCount("Action", conn);
+	cout << query->GetUsers_WT_SM_Games("xavHow@live.com",conn);
+	cout << query->GetPurchByUser("xavHow@live.com", conn);
+	cout << query->GetPurchByDate("2021-09-24", conn);
+	cout << query->GetPurchByState("WA",conn);
+	cout << query->GetPurchByBillAdd("1111 Wilshire Blvd", "Los Angeles", "CA", "90017", conn);
 	PQfinish(conn);
-	fflush(stdout);
+	//fflush(stdout);
 	
 	
 	//delete conninfo;
