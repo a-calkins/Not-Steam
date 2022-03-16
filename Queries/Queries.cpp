@@ -26,6 +26,7 @@ string Queries::GetGamesByUser(string email, PGconn* conn) //user that own a gam
 
     if (!CommitTransaction(conn))return"Error";
 
+	DeallocateAllPrepares(conn);
     return Print(res);
      
 }
@@ -45,6 +46,7 @@ string Queries::GetGamesSold(PGconn* conn) //all games available for purchase
 
     if (!CommitTransaction(conn))return"Error";
 
+	DeallocateAllPrepares(conn);
     return Print(res);
 }
 
@@ -66,6 +68,7 @@ string Queries::GetGamesReleasedBetweenDates(string dateA, string dateB, PGconn*
 
     if (!CommitTransaction(conn))return"Error";
 
+	DeallocateAllPrepares(conn);
     return Print(res);
 }
 
@@ -88,6 +91,7 @@ string Queries::GetGamesPriceRange(double priceA, double priceB, PGconn* conn)
 
     if (!CommitTransaction(conn))return"Error";
 
+	DeallocateAllPrepares(conn);
     return Print(res);
 }
 
@@ -110,6 +114,7 @@ string Queries::FriendsOfUser(int id, PGconn* conn)
 
     if (!CommitTransaction(conn))return"Error";
 
+	DeallocateAllPrepares(conn);
     return Print(res);
 }
 
@@ -133,6 +138,7 @@ string Queries::GetGamesByPub(string pub, PGconn* conn) //games by developer
 
     if (!CommitTransaction(conn))return"Error";
 
+	DeallocateAllPrepares(conn);
     return Print(res);
 }
 string Queries::GetGamesByDev(string dev, PGconn* conn) //Games by developer
@@ -141,8 +147,8 @@ string Queries::GetGamesByDev(string dev, PGconn* conn) //Games by developer
     if (!BeginTransaction(conn)) {
         return "";
     }
-    string query = "GetGamesByDev AS (text) SELECT * FROM account JOIN developer ON(name = $1)";
-    query += "WHERE developerID = developer.ID;";
+    string query = "GetGamesByDev (text) AS SELECT title, game.id FROM Game JOIN developer ON(developerID = developer.ID)";
+    query += " WHERE developer.name = $1;";
 
     if (!PrepareTransaction(conn, query)) {
         return "Error";
@@ -153,6 +159,7 @@ string Queries::GetGamesByDev(string dev, PGconn* conn) //Games by developer
 
     if (!CommitTransaction(conn))return"Error";
 
+	DeallocateAllPrepares(conn);
     return Print(res);
 }
 string Queries::GetUsersByGame(string gmTitle, PGconn* conn) //Get user that own a game
@@ -175,6 +182,7 @@ string Queries::GetUsersByGame(string gmTitle, PGconn* conn) //Get user that own
 
     if (!CommitTransaction(conn))return"Error";
 
+	DeallocateAllPrepares(conn);
     return Print(res);
 }
 string Queries::GetGenreCount(string genre, PGconn* conn)
@@ -184,17 +192,18 @@ string Queries::GetGenreCount(string genre, PGconn* conn)
         return "";
     }
 
-    string query = "GetGenereCount (text) AS SELECT name, count(*) FROM GENRE JOIN Game ON(genre.ID = genreid)";
+    string query = "GetGenreCount (text) AS SELECT name, count(*) FROM GENRE JOIN Game ON(genre.ID = genreid)";
     query += "WHERE name = $1 GROUP BY name;";
     if (!PrepareTransaction(conn, query)) {
         return "Error";
     }
-    res = ExecuteTransQuery(conn, "GetGenereCount('" + genre + "');"); 
+    res = ExecuteTransQuery(conn, "GetGenreCount('" + genre + "');"); 
     if (res == NULL) return"Error";
     
 
     if (!CommitTransaction(conn))return"Error";
 
+	DeallocateAllPrepares(conn);
     return Print(res);
 
 }
@@ -207,7 +216,7 @@ string Queries::GetUsers_WT_SM_Games(string email, PGconn* conn) //get users wit
     }
 
     
-    string query = "GetUsers_WT_SM_Games (text) AS SELECT email FROM (Select title FROM Game JOIN PurchaseItem ON(Game.ID = GameId) ";
+    string query = "GetUsers_WT_SM_Games (text) AS SELECT DISTINCT email FROM (Select title FROM Game JOIN PurchaseItem ON(Game.ID = GameId) ";
     query += "JOIN Purchase ON(Purchase.id = PurchaseID) JOIN Account ON(AccountID = Account.id) ";
     query += "WHERE email = $1)AS T1 JOIN(Select title, email FROM Game ";
     query += "JOIN PurchaseItem ON(Game.ID = GameId) JOIN Purchase ON(Purchase.id = PurchaseID) ";
@@ -220,6 +229,7 @@ string Queries::GetUsers_WT_SM_Games(string email, PGconn* conn) //get users wit
 
     if (!CommitTransaction(conn))return"Error";
 
+	DeallocateAllPrepares(conn);
     return Print(res);
     
 }
@@ -244,6 +254,7 @@ string Queries::GetPurchByUser(string email, PGconn* conn)
 
     if (!CommitTransaction(conn))return"Error";
 
+	DeallocateAllPrepares(conn);
     return Print(res);
 }
 
@@ -266,6 +277,7 @@ string Queries::GetPurchByDate(string date, PGconn* conn)
 
     if (!CommitTransaction(conn))return"Error";
 
+	DeallocateAllPrepares(conn);
     return Print(res);
   
 
@@ -290,6 +302,7 @@ string Queries::GetPurchByBillAdd(string street, string city, string state, stri
 
     if (!CommitTransaction(conn))return"Error";
 
+	DeallocateAllPrepares(conn);
     return Print(res);
 }
 string Queries::GetPurchByState(string state, PGconn* conn)
@@ -310,6 +323,7 @@ string Queries::GetPurchByState(string state, PGconn* conn)
 
     if (!CommitTransaction(conn))return"Error";
 
+	DeallocateAllPrepares(conn);
     return Print(res);
 }
 string Queries::Print(PGresult* res)
@@ -325,7 +339,8 @@ string Queries::Print(PGresult* res)
         int maxSize = 0;
         for (int j = 0; j < PQntuples(res); j++) //rows in each field
         {
-            if(string(PQgetvalue(res, j, i)).length() > maxSize) maxSize = string(PQgetvalue(res, j, i)).length();                                                                //resString += "|" + string(PQgetvalue(res, i, j));
+            if(string(PQgetvalue(res, j, i)).length() > maxSize) 
+				maxSize = (int)string(PQgetvalue(res, j, i)).length();                                                                //resString += "|" + string(PQgetvalue(res, i, j));
               
         }
         int size = maxSize-2;
@@ -338,9 +353,12 @@ string Queries::Print(PGresult* res)
         {
             resString += " ";
         }
-        if (i < PQnfields(res) - 1) { resString += "|"; lineIndexes.push_back(resString.length() - 2); }
-        maxLengths.push_back(maxSize + string(PQfname(res, i)).length());
-        totalLength += maxSize+string(PQfname(res, i)).length();
+        if (i < PQnfields(res) - 1) { 
+			resString += "|"; 
+			lineIndexes.push_back((int)resString.length() - 2); 
+		}
+        maxLengths.push_back(maxSize + (int)string(PQfname(res, i)).length());
+        totalLength += maxSize+(int)string(PQfname(res, i)).length();
     }
        
     resString += "\n";
@@ -369,35 +387,5 @@ string Queries::Print(PGresult* res)
     }
     PQclear(res);
     return resString;
-}
-//{
-    
-//}
-string Queries::DeleteGame(PGconn* conn, string title) {
-    //Begin transaction
-    PGresult* res = NULL;
-    //if BEGIN fails, return false
-    if (!BeginTransaction(conn)) {
-        return "ERROR";
-    }
-
-    //Part 1 - Deleting PurchaseItems
-    //Prepare statement
-    string deletePurchaseItemsByGame = "deletePurchaseItemsByGame (text) AS SELECT id FROM Game WHERE title = $1;";
-    if (!PrepareTransaction(conn, deletePurchaseItemsByGame)) {
-        return "ERROR";
-    }
-
-    //Create the execute string with passed parameters
-    string command = "deletePurchaseItemsByGame('" + title + "');";
-    //Execute prepared statement
-    res = ExecuteTransQuery(conn, command);
-    
-
-    //Commit, ending the transaction
-    CommitTransaction(conn);
-    
-    DeallocateAllPrepares(conn);
-    return Print(res);
 }
 
